@@ -115,3 +115,12 @@ For issues:
 1. Check [BZLMOD_MIGRATION.md](BZLMOD_MIGRATION.md)
 2. Review Bazel logs: `bazel build //... --verbose_failures`
 3. Contact maintainers: maintainers at openxla.org
+
+## Testing Status
+
+✅ **Tested with Bazel 7.6.1** - Basic configuration working
+✅ **Simple builds pass** - `//:license` target builds successfully
+⚠️ **Protobuf patch disabled** - Needs update for version 31.x
+⚠️ **Full testing pending** - XLA components, Python, CUDA configs
+
+See [BZLMOD_MIGRATION.md](BZLMOD_MIGRATION.md) for detailed testing status.

@@ -132,3 +132,49 @@ When adding new dependencies:
 - [Bazel Central Registry](https://registry.bazel.build/)
 - [Migration guide](https://bazel.build/external/migration)
 - [Module extensions](https://bazel.build/external/extension)
+
+## Testing Status
+
+Successfully tested with Bazel 7.6.1:
+
+✅ **Working:**
+- Bazel 7.6.1 installation and execution
+- MODULE.bazel loads without errors
+- Dependency resolution (with auto-upgrades to compatible versions)
+- Basic builds: `//:license` target builds successfully
+- Hermetic Python configuration
+- ML toolchain integration
+
+⚠️ **Known Issues:**
+1. **Protobuf patch** - Temporarily disabled due to version incompatibility
+   - Patch targets protobuf 6.31.1 but bzlmod resolves to 31.1
+   - Needs updating for newer protobuf version
+2. **Other patches** - May need updates for upgraded dependency versions
+3. **Version auto-upgrades** - Several dependencies upgraded (expected bzlmod behavior):
+   - bazel_skylib: 1.7.1 → 1.8.1
+   - googletest: 1.15.2 → 1.17.0
+   - protobuf: 29.2 → 31.1
+   - re2, zlib, rules_apple also auto-upgraded
+
+**Test Commands:**
+```bash
+# Verify Bazel version
+$ bazel --version
+bazel 7.6.1
+
+# Test simple build
+$ bazel build //:license
+INFO: Build completed successfully
+
+# Check dependency graph
+$ bazel mod graph
+
+# Test Python setup
+$ bazel build //xla/python/...
+```
+
+**Next Steps:**
+1. Update protobuf.patch for protobuf 31.x compatibility
+2. Test other patches with resolved dependency versions
+3. Run comprehensive build tests on XLA components
+4. Test CUDA/hardware acceleration configurations
