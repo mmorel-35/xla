@@ -1,4 +1,8 @@
 # buildifier: disable=load-on-top
+# NOTE: This WORKSPACE file is deprecated in favor of bzlmod (MODULE.bazel).
+# When bzlmod is enabled (Bazel 7.6.1+), this file is only used for compatibility
+# and custom dependencies not yet available in the Bazel Central Registry.
+# See MODULE.bazel and WORKSPACE.bzlmod for the new configuration.
 workspace(name = "xla")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")

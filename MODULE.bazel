@@ -4,6 +4,8 @@ module(
     name = "xla",
     version = "0.0.0",
     repo_name = "xla",
+    # Minimum Bazel version required
+    bazel_compatibility = [">=7.6.1"],
 )
 
 # Core Bazel rules
@@ -113,6 +115,8 @@ bazel_dep(name = "rules_swift", version = "2.2.4", repo_name = "build_bazel_rule
 
 # Android rules (check if available in BCR or keep in workspace)
 # Note: May need to stay in WORKSPACE.bzlmod if not in BCR at required version
+bazel_dep(name = "rules_android", version = "0.1.1", repo_name = "build_bazel_rules_android")
+
 
 
 # Python extension setup
@@ -133,11 +137,11 @@ pip.parse(
     requirements_lock = "//:requirements_lock_3_11.txt",
 )
 pip.parse(
-    hub_name = "pypi",
+    hub_name = "pypi_312",
     python_version = "3.12",
     requirements_lock = "//:requirements_lock_3_12.txt",
 )
-use_repo(pip, "pypi")
+use_repo(pip, "pypi", "pypi_312")
 
 # Register toolchains
 register_toolchains("@rules_python//python/runtime_env_toolchains:all")
