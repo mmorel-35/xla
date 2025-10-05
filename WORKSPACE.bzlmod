@@ -66,8 +66,9 @@ python_init_toolchains()
 load("//third_party/py:python_init_pip.bzl", "python_init_pip")
 python_init_pip()
 
-load("@pypi//:requirements.bzl", "install_deps")
-install_deps()
+# Note: install_deps() is not needed in bzlmod as pip dependencies are managed via MODULE.bazel
+# load("@pypi//:requirements.bzl", "install_deps")
+# install_deps()
 
 load(":workspace2.bzl", "xla_workspace2")
 xla_workspace2()

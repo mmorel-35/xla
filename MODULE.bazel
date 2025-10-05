@@ -17,13 +17,13 @@ bazel_dep(name = "rules_proto", version = "7.0.2")
 bazel_dep(name = "bazel_features", version = "1.25.0")
 
 # C++ rules and toolchain
-bazel_dep(name = "rules_cc", version = "0.1.0")
+bazel_dep(name = "rules_cc", version = "0.1.1")
 
 # Override rules_cc to apply custom patches if needed
 # The workspace applies rules_cc_protobuf.patch
 single_version_override(
     module_name = "rules_cc",
-    version = "0.1.0",
+    version = "0.1.1",
     patches = ["//third_party/py:rules_cc_protobuf.patch"],
     patch_strip = 1,
 )
@@ -43,17 +43,18 @@ single_version_override(
     patch_strip = 1,
 )
 
-# Protocol buffers (using 28.3 as 29.x might not be in BCR yet)
-# Note: The workspace uses protobuf 6.31.1 which maps to protobuf v28.x in new versioning
-bazel_dep(name = "protobuf", version = "28.3", repo_name = "com_google_protobuf")
+# Protocol buffers (using 29.2 which is available in BCR)
+# Note: The workspace uses protobuf 6.31.1 which maps to protobuf v29.x in new versioning
+# Patches may need updating for the new version
+bazel_dep(name = "protobuf", version = "29.2", repo_name = "com_google_protobuf")
 
-# Override protobuf to apply custom patches
-single_version_override(
-    module_name = "protobuf",
-    version = "28.3",
-    patches = ["//third_party/protobuf:protobuf.patch"],
-    patch_strip = 1,
-)
+# TODO: Update protobuf patch to work with 29.2 or remove if not needed
+# single_version_override(
+#     module_name = "protobuf",
+#     version = "29.2",
+#     patches = ["//third_party/protobuf:protobuf.patch"],
+#     patch_strip = 1,
+# )
 
 # Abseil (LTS 20240722.0 or later)
 bazel_dep(name = "abseil-cpp", version = "20240722.0", repo_name = "com_google_absl")
@@ -73,13 +74,13 @@ single_version_override(
     patch_strip = 1,
 )
 
-# gRPC (use 1.68.1 or closest available in BCR)
-bazel_dep(name = "grpc", version = "1.68.1", repo_name = "com_github_grpc_grpc")
+# gRPC (using 1.74.0 to match workspace configuration)
+bazel_dep(name = "grpc", version = "1.74.0", repo_name = "com_github_grpc_grpc")
 
 # Override grpc to apply custom patches
 single_version_override(
     module_name = "grpc",
-    version = "1.68.1",
+    version = "1.74.0",
     patches = ["//third_party/grpc:grpc.patch"],
     patch_strip = 1,
 )
