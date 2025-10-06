@@ -32,8 +32,8 @@ The MODULE.bazel file declares:
 
 ### WORKSPACE.bzlmod Structure
 Contains dependencies that cannot be migrated to MODULE.bazel yet:
-- **rules_ml_toolchain**: Custom ML toolchain not in BCR
-- **rules_closure**: Legacy rules (2019 version)
+- **rules_ml_toolchain**: Custom ML toolchain (has MODULE.bazel support but not yet in BCR)
+- **rules_closure**: Legacy rules (version 0.15.0 available in BCR, but workspace1.bzl still calls closure_repositories() which conflicts with bzlmod; TODO: migrate after refactoring workspace1.bzl)
 - **workspace0-4.bzl**: Existing workspace initialization files
 - **Python setup**: Hermetic Python configuration
 - **Hardware support**: CUDA, NCCL, NVSHMEM configurations

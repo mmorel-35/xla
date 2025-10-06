@@ -46,6 +46,19 @@ Using `single_version_override`:
 - **Hardware**: CUDA, ROCm, NCCL, NVSHMEM, TensorRT configs
 - **Hermetic Python**: Custom Python setup with pip integration
 
+## Version Synchronization
+
+**rules_ml_toolchain**: 
+- WORKSPACE version: commit 18ba88facf7f0d7203adbaccb982315936b1ac7a (2025-10-02)
+- Has MODULE.bazel support but not yet in BCR
+- Loaded from GitHub archive in WORKSPACE.bzlmod
+
+**rules_closure**:
+- WORKSPACE version: commit 308b05b2419edb5c8ee0471b67a40403df940149 (2019-06-13)
+- BCR version available: 0.15.0
+- Currently using WORKSPACE version due to workspace1.bzl calling closure_repositories()
+- TODO: Migrate to MODULE.bazel after refactoring workspace1.bzl
+
 ## Common Build Commands
 
 ```bash
