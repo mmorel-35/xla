@@ -4,9 +4,7 @@
 
 # Ignore the bazel directories when this directory is used as a local repository.
 bazel-*
-bazel-bin
-bazel-out
-bazel-testlogs
+MODULE.bazel.lock
 
 # Ignore files produced by `configure`
 .tf_configure.bazelrc

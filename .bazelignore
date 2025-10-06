@@ -1,0 +1,2 @@
+# Ignore sub-workspaces when using bzlmod
+xla/mlir_hlo

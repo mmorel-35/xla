@@ -1,0 +1,157 @@
+"""XLA Bazel module for bzlmod"""
+
+module(
+    name = "xla",
+    version = "0.0.0",
+    repo_name = "xla",
+    # Minimum Bazel version required
+    bazel_compatibility = [">=7.6.1"],
+)
+
+# Core Bazel rules
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "platforms", version = "0.0.11")
+bazel_dep(name = "rules_license", version = "1.0.0")
+bazel_dep(name = "rules_pkg", version = "1.0.1")
+bazel_dep(name = "rules_proto", version = "7.0.2")
+bazel_dep(name = "bazel_features", version = "1.25.0")
+
+# C++ rules and toolchain
+bazel_dep(name = "rules_cc", version = "0.1.1")
+
+# Override rules_cc to apply custom patches if needed
+# The workspace applies rules_cc_protobuf.patch
+single_version_override(
+    module_name = "rules_cc",
+    version = "0.1.1",
+    patches = ["//third_party/py:rules_cc_protobuf.patch"],
+    patch_strip = 1,
+)
+
+# Python rules
+bazel_dep(name = "rules_python", version = "1.6.0")
+
+# Override rules_python to apply custom patches
+single_version_override(
+    module_name = "rules_python",
+    version = "1.6.0",
+    patches = [
+        "//third_party/py:rules_python_pip_version.patch",
+        "//third_party/py:rules_python_freethreaded.patch",
+        "//third_party/py:rules_python_versions.patch",
+    ],
+    patch_strip = 1,
+)
+
+# Protocol buffers (using 29.2 which is available in BCR)
+# Note: The workspace uses protobuf 6.31.1 which maps to protobuf v29.x in new versioning
+# Patches may need updating for the new version
+bazel_dep(name = "protobuf", version = "29.2", repo_name = "com_google_protobuf")
+
+# TODO: Update protobuf patch to work with 29.2 or remove if not needed
+# single_version_override(
+#     module_name = "protobuf",
+#     version = "29.2",
+#     patches = ["//third_party/protobuf:protobuf.patch"],
+#     patch_strip = 1,
+# )
+
+# Abseil (LTS 20240722.0 or later)
+bazel_dep(name = "abseil-cpp", version = "20240722.0", repo_name = "com_google_absl")
+
+# Override abseil to apply custom patches
+single_version_override(
+    module_name = "abseil-cpp",
+    version = "20240722.0",
+    patches = [
+        "//third_party/absl:btree.patch",
+        "//third_party/absl:build_dll.patch",
+        "//third_party/absl:endian.patch",
+        "//third_party/absl:rules_cc.patch",
+        "//third_party/absl:check_op.patch",
+        "//third_party/absl:check_op_2.patch",
+    ],
+    patch_strip = 1,
+)
+
+# gRPC (using 1.74.0 to match workspace configuration)
+bazel_dep(name = "grpc", version = "1.74.0", repo_name = "com_github_grpc_grpc")
+
+# Override grpc to apply custom patches
+single_version_override(
+    module_name = "grpc",
+    version = "1.74.0",
+    patches = ["//third_party/grpc:grpc.patch"],
+    patch_strip = 1,
+)
+
+# Google Test
+bazel_dep(name = "googletest", version = "1.15.2", repo_name = "com_google_googletest")
+
+# Google Benchmark  
+bazel_dep(name = "google_benchmark", version = "1.9.1", repo_name = "com_google_benchmark")
+
+# RE2
+bazel_dep(name = "re2", version = "2024-07-02", repo_name = "com_googlesource_code_re2")
+
+# zlib
+bazel_dep(name = "zlib", version = "1.3.1.bcr.4")
+
+# Rules for JVM external dependencies
+bazel_dep(name = "rules_jvm_external", version = "6.5")
+
+# Go rules (required by grpc)
+bazel_dep(name = "rules_go", version = "0.50.1", repo_name = "io_bazel_rules_go")
+bazel_dep(name = "gazelle", version = "0.40.0")
+
+# Shell rules
+bazel_dep(name = "rules_shell", version = "0.4.1")
+
+# Apple rules (for macOS/iOS support)
+bazel_dep(name = "rules_apple", version = "3.12.0", repo_name = "build_bazel_rules_apple")
+bazel_dep(name = "apple_support", version = "1.17.1", repo_name = "build_bazel_apple_support")
+
+# Swift rules
+bazel_dep(name = "rules_swift", version = "2.2.4", repo_name = "build_bazel_rules_swift")
+
+# Android rules (check if available in BCR or keep in workspace)
+# Note: May need to stay in WORKSPACE.bzlmod if not in BCR at required version
+bazel_dep(name = "rules_android", version = "0.1.1", repo_name = "build_bazel_rules_android")
+
+
+
+# Python extension setup
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    python_version = "3.11",
+    is_default = True,
+)
+python.toolchain(
+    python_version = "3.12",
+)
+
+# pip dependencies
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pypi",
+    python_version = "3.11",
+    requirements_lock = "//:requirements_lock_3_11.txt",
+)
+pip.parse(
+    hub_name = "pypi_312",
+    python_version = "3.12",
+    requirements_lock = "//:requirements_lock_3_12.txt",
+)
+use_repo(pip, "pypi", "pypi_312")
+
+# Register toolchains
+register_toolchains("@rules_python//python/runtime_env_toolchains:all")
+
+# Non-bzlmod dependencies that need to be handled via workspace or extensions
+# These will be loaded from WORKSPACE.bzlmod or custom extensions
+
+# ML Toolchain (not in BCR, will need workspace or extension)
+# third_party dependencies (many custom repos, will need workspace or extension)
+# CUDA/ROCm/TensorRT dependencies (hardware-specific, will need workspace or extension)
+# LLVM project (custom setup)
+# Various third_party repos from third_party/ directory
